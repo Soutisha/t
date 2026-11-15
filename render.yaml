@@ -1,12 +1,6 @@
-# EUROGRIP PITSTOP OS — single-origin Render deployment.
-# This Blueprint creates only new, separately named resources.
+# EUROGRIP PITSTOP OS — zero-cost Render web tier with external free PostgreSQL.
+# Render's free database and Redis quota is already used by another project.
 services:
-  - type: keyvalue
-    name: eurogrip-pitstop-redis
-    region: singapore
-    plan: free
-    maxmemoryPolicy: noeviction
-    ipAllowList: []
   - type: web
     name: eurogrip-pitstop-os
     runtime: docker
@@ -22,19 +16,10 @@ services:
       - key: APP_NAME
         value: EUROGRIP PITSTOP OS API
       - key: DATABASE_URL
-        fromDatabase:
-          name: eurogrip-pitstop-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          name: eurogrip-pitstop-redis
-          type: keyvalue
-          property: connectionString
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: CLIENT_FINGERPRINT_SECRET
-        generateValue: true
-      - key: METRICS_TOKEN
         generateValue: true
       - key: OTP_DEV_RETURN_CODE
         value: "true"
@@ -52,10 +37,3 @@ services:
         value: hashing
       - key: AUDIT_LOG_ENABLED
         value: "true"
-databases:
-  - name: eurogrip-pitstop-db
-    region: singapore
-    plan: free
-    databaseName: pitstop
-    user: pitstop
-    postgresMajorVersion: 16
