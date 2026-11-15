@@ -1,0 +1,95 @@
+{
+  "pilot_scope": {
+    "geography": "REPLACE_WITH_APPROVED_PILOT_GEOGRAPHY",
+    "start_date": "YYYY-MM-DD",
+    "end_date": "YYYY-MM-DD",
+    "cohort_size": 0,
+    "approved_features": []
+  },
+  "owners": {
+    "business_owner": {
+      "role_title": ""
+    },
+    "technical_owner": {
+      "role_title": ""
+    },
+    "privacy_data_owner": {
+      "role_title": ""
+    },
+    "support_contact": {
+      "role_title": ""
+    },
+    "pilot_coordinator": {
+      "role_title": ""
+    }
+  },
+  "evidence": {
+    "business_scope_approved": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "privacy_notice_and_consent_approved": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "retention_and_deletion_policy_approved": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "external_tls_and_dns_verified": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "twilio_real_otp_journey_passed": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "minio_scoped_identity_verified": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "encrypted_backup_restore_drill_passed": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "monitoring_alert_delivery_tested": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "manual_critical_workflows_signed_off": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "rollback_and_stop_procedure_rehearsed": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    },
+    "participant_recruitment_and_consent_approved": {
+      "status": "pending",
+      "evidence_ref": "",
+      "approved_by_role": "",
+      "approved_at": ""
+    }
+  },
+  "note": "Template only. Store completed approvals in a restricted operator-controlled location, not source control."
+}
