@@ -1,0 +1,76 @@
+# Local development stack with real Twilio SMS OTP and persistent PostgreSQL/Redis.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pitstop
+      POSTGRES_USER: pitstop
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pitstop -d pitstop"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"${REDIS_PASSWORD}\""]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"${REDIS_PASSWORD}\" ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+  api:
+    build:
+      context: ./backend
+    environment:
+      APP_ENV: staging
+      APP_NAME: EUROGRIP PITSTOP OS API
+      DATABASE_URL: postgresql+psycopg://pitstop:${POSTGRES_PASSWORD}@postgres:5432/pitstop
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      CLIENT_FINGERPRINT_SECRET: ${CLIENT_FINGERPRINT_SECRET:?Set CLIENT_FINGERPRINT_SECRET in .env}
+      METRICS_TOKEN: ${METRICS_TOKEN:?Set METRICS_TOKEN in .env}
+      OTP_DEV_RETURN_CODE: "false"
+      OTP_TTL_MINUTES: ${OTP_TTL_MINUTES:-5}
+      SMS_PROVIDER: twilio
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:?Set TWILIO_ACCOUNT_SID in .env}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:?Set TWILIO_AUTH_TOKEN in .env}
+      TWILIO_FROM_NUMBER: ${TWILIO_FROM_NUMBER:?Set TWILIO_FROM_NUMBER in .env}
+      CORS_ORIGINS: http://localhost:3000
+      OBJECT_STORAGE_BACKEND: local
+      OBJECT_STORAGE_LOCAL_DIR: /app/var/objects
+      TRUSTVISION_STORAGE_DIR: /app/var/trustvision
+      RAG_EMBEDDING_PROVIDER: hashing
+    ports:
+      - "8000:8000"
+    volumes:
+      - trustvision_data:/app/var/trustvision
+      - object_data:/app/var/objects
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+  web:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  postgres_data:
+  redis_data:
+  trustvision_data:
+  object_data:
