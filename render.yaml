@@ -11,7 +11,7 @@ services:
     name: eurogrip-pitstop-os
     runtime: docker
     region: singapore
-    plan: starter
+    plan: free
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /healthz
