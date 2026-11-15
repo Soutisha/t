@@ -1,0 +1,33 @@
+groups:
+  - name: eurogrip-pitstop-api
+    rules:
+      - alert: PitstopApiUnavailable
+        expr: up{job="eurogrip-pitstop-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: EUROGRIP PITSTOP API scrape target is unavailable
+      - alert: PitstopApiHighServerErrorRate
+        expr: |
+          (
+            sum(rate(pitstop_http_requests_total{job="eurogrip-pitstop-api",status=~"5.."}[5m]))
+            /
+            clamp_min(sum(rate(pitstop_http_requests_total{job="eurogrip-pitstop-api"}[5m])), 0.001)
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: More than 5 percent of API requests are returning server errors
+      - alert: PitstopApiHighP95Latency
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (rate(pitstop_http_request_duration_seconds_bucket{job="eurogrip-pitstop-api"}[5m]))
+          ) > 1.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: API p95 request latency is above 1.5 seconds

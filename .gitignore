@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+backups/
+*.dump
+*.tar.gz
+__pycache__/
+.pytest_cache/
+node_modules/
+dist/
+secrets/\n*.age\n*.age.sha256\n
