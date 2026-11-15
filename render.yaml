@@ -4,7 +4,7 @@ services:
   - type: keyvalue
     name: eurogrip-pitstop-redis
     region: singapore
-    plan: starter
+    plan: free
     maxmemoryPolicy: noeviction
     ipAllowList: []
   - type: web
@@ -18,7 +18,7 @@ services:
     autoDeploy: false
     envVars:
       - key: APP_ENV
-        value: production
+        value: staging
       - key: APP_NAME
         value: EUROGRIP PITSTOP OS API
       - key: DATABASE_URL
@@ -37,33 +37,13 @@ services:
       - key: METRICS_TOKEN
         generateValue: true
       - key: OTP_DEV_RETURN_CODE
-        value: "false"
+        value: "true"
       - key: CORS_ORIGINS
         value: ""
       - key: SMS_PROVIDER
-        value: twilio
-      - key: TWILIO_ACCOUNT_SID
-        sync: false
-      - key: TWILIO_AUTH_TOKEN
-        sync: false
-      - key: TWILIO_FROM_NUMBER
-        sync: false
+        value: none
       - key: OBJECT_STORAGE_BACKEND
-        value: s3
-      - key: S3_BUCKET
-        sync: false
-      - key: S3_REGION
-        sync: false
-      - key: S3_ENDPOINT_URL
-        sync: false
-      - key: S3_ACCESS_KEY_ID
-        sync: false
-      - key: S3_SECRET_ACCESS_KEY
-        sync: false
-      - key: S3_PREFIX
-        value: pitstop
-      - key: S3_SERVER_SIDE_ENCRYPTION
-        value: ""
+        value: local
       - key: TRUSTVISION_STORAGE_DIR
         value: /app/var/trustvision
       - key: OBJECT_STORAGE_LOCAL_DIR
@@ -75,7 +55,7 @@ services:
 databases:
   - name: eurogrip-pitstop-db
     region: singapore
-    plan: basic_256mb
+    plan: free
     databaseName: pitstop
     user: pitstop
     postgresMajorVersion: 16
