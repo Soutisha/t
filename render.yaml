@@ -1,0 +1,81 @@
+# EUROGRIP PITSTOP OS — single-origin Render deployment.
+# This Blueprint creates only new, separately named resources.
+services:
+  - type: keyvalue
+    name: eurogrip-pitstop-redis
+    region: singapore
+    plan: starter
+    maxmemoryPolicy: noeviction
+    ipAllowList: []
+  - type: web
+    name: eurogrip-pitstop-os
+    runtime: docker
+    region: singapore
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    autoDeploy: false
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_NAME
+        value: EUROGRIP PITSTOP OS API
+      - key: DATABASE_URL
+        fromDatabase:
+          name: eurogrip-pitstop-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: eurogrip-pitstop-redis
+          type: keyvalue
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_FINGERPRINT_SECRET
+        generateValue: true
+      - key: METRICS_TOKEN
+        generateValue: true
+      - key: OTP_DEV_RETURN_CODE
+        value: "false"
+      - key: CORS_ORIGINS
+        value: ""
+      - key: SMS_PROVIDER
+        value: twilio
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_FROM_NUMBER
+        sync: false
+      - key: OBJECT_STORAGE_BACKEND
+        value: s3
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_REGION
+        sync: false
+      - key: S3_ENDPOINT_URL
+        sync: false
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: S3_PREFIX
+        value: pitstop
+      - key: S3_SERVER_SIDE_ENCRYPTION
+        value: ""
+      - key: TRUSTVISION_STORAGE_DIR
+        value: /app/var/trustvision
+      - key: OBJECT_STORAGE_LOCAL_DIR
+        value: /app/var/objects
+      - key: RAG_EMBEDDING_PROVIDER
+        value: hashing
+      - key: AUDIT_LOG_ENABLED
+        value: "true"
+databases:
+  - name: eurogrip-pitstop-db
+    region: singapore
+    plan: basic_256mb
+    databaseName: pitstop
+    user: pitstop
+    postgresMajorVersion: 16
