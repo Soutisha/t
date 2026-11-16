@@ -48,7 +48,12 @@ services:
       OBJECT_STORAGE_BACKEND: local
       OBJECT_STORAGE_LOCAL_DIR: /app/var/objects
       TRUSTVISION_STORAGE_DIR: /app/var/trustvision
-      RAG_EMBEDDING_PROVIDER: hashing
+      RAG_EMBEDDING_PROVIDER: ${RAG_EMBEDDING_PROVIDER:-hashing}
+      RAG_MIN_SIMILARITY: ${RAG_MIN_SIMILARITY:-0.12}
+      RAG_LLM_BASE_URL: ${RAG_LLM_BASE_URL:-}
+      RAG_LLM_API_KEY: ${RAG_LLM_API_KEY:-}
+      RAG_LLM_MODEL: ${RAG_LLM_MODEL:-}
+      RAG_LLM_TIMEOUT_SECONDS: ${RAG_LLM_TIMEOUT_SECONDS:-45}
     ports:
       - "8000:8000"
     volumes:
