@@ -97,7 +97,7 @@ A PostgreSQL `password authentication failed` error commonly means the password 
 5. Run the guarded operator script from the repository root:
 
 ```powershell
-docker compose -p eurogrip-pitstop-local -f docker-compose.local.yml --env-file .env exec api python scripts/bootstrap_admin.py --phone +91XXXXXXXXXX --confirm GRANT-ADMIN
+docker compose -p eurogrip-pitstop-local -f docker-compose.local.yml --env-file .env exec api python -m scripts.bootstrap_admin --phone +91XXXXXXXXXX --confirm GRANT-ADMIN
 ```
 
 Replace the example number with the same registered number. This script is intentionally limited to development/staging, requires explicit confirmation, and only promotes an existing active account. It does not bypass OTP or create an unauthenticated admin endpoint.
